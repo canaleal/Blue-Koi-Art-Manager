@@ -26,6 +26,7 @@ class _GalleryState extends State<Gallery> {
 
   late List<Photo> photolist;
   bool isLoaded = false;
+  bool isSearchable = false;
 
   @override
   void initState() {
@@ -37,24 +38,32 @@ class _GalleryState extends State<Gallery> {
   }
 
   void loader() async {
-    final client = UnsplashClient(
-      settings: const ClientSettings(
-          credentials: AppCredentials(
-        accessKey: 'byVpt0dHXyzvmAM-HixXGw_1TGQOxS4ViH1hIhNEanY',
-        secretKey: 'coq98aPMtqIjOJrxZqkfaFEhFyV8vycPvbJZrK2M2cM',
-      )),
-    );
+    try {
+      final UnsplashClient client = UnsplashClient(
+        settings: const ClientSettings(
+            credentials: AppCredentials(
+          accessKey: 'byVpt0dHXyzvmAM-HixXGw_1TGQOxS4ViH1hIhNEanY',
+          secretKey: 'coq98aPMtqIjOJrxZqkfaFEhFyV8vycPvbJZrK2M2cM',
+        )),
+      );
 
-    // Call `goAndGet` to execute the [Request] returned from `random`
-    // and throw an exception if the [Response] is not ok.
-    final photos = await client.photos
-        .random(query: search, count: int.parse(count))
-        .goAndGet();
+      // Call `goAndGet` to execute the [Request] returned from `random`
+      // and throw an exception if the [Response] is not ok.
+      final List<Photo> photos = await client.photos
+          .random(query: search, count: int.parse(count))
+          .goAndGet();
 
-    setState(() {
-      isLoaded = true;
-      photolist = photos;
-    });
+      setState(() {
+        isLoaded = true;
+        isSearchable = true;
+        photolist = photos;
+      });
+    } catch (error) {
+      setState(() {
+        isLoaded = true;
+        isSearchable = false;
+      });
+    }
   }
 
   @override
@@ -108,35 +117,45 @@ class _GalleryState extends State<Gallery> {
               Text(
                 '${search} - #${count}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: getProportionateScreenHeight(20)),
               isLoaded
-                  ? GridView.count(
-                      shrinkWrap: true,
-                      //maintaining the size of scrollview whenever the scroll position changes
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
+                  ? isSearchable
+                      ? GridView.count(
+                          shrinkWrap: true,
+                          //maintaining the size of scrollview whenever the scroll position changes
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
 
-                      children: [
-                        for (var photo in photolist)
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: getProportionateScreenHeight(2),
-                                horizontal: getProportionateScreenWidth(2)),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => Preview(photo: photo),
-                                  ),
-                                );
-                              },
-                              child: _container(photo.urls.thumb.toString()),
-                            ),
-                          ),
-                      ],
-                    )
+                          children: [
+                            for (var photo in photolist)
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: getProportionateScreenHeight(2),
+                                    horizontal: getProportionateScreenWidth(2)),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            Preview(photo: photo),
+                                      ),
+                                    );
+                                  },
+                                  child:
+                                      _container(photo.urls.thumb.toString()),
+                                ),
+                              ),
+                          ],
+                        )
+                      : Text(
+                          'Error, no images or videos for ${search} exist.',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        )
                   : const Center(child: CircularProgressIndicator())
             ],
           ),
