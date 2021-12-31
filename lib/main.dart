@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Muli',
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
         brightness: Brightness.light,
       ),
       home: const SplashScreen(),

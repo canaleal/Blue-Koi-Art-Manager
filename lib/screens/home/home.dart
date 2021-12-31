@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
             children: [
               Expanded(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: getProportionateScreenHeight(20)),
@@ -76,6 +76,10 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   final _registerFormKey = GlobalKey<FormState>();
+
+  String count = '10';
+  String api = 'Unsplash';
+
   String? name;
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -105,16 +109,42 @@ class _SearchFormState extends State<SearchForm> {
       padding:
           EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Form(
             key: _registerFormKey,
             child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 buildNameFormField(),
-                SizedBox(height: getProportionateScreenHeight(10)),
+                SizedBox(height: getProportionateScreenHeight(20)),
                 FormError(errors: errors),
-                SizedBox(height: getProportionateScreenHeight(40)),
+                SizedBox(height: getProportionateScreenHeight(10)),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: getProportionateScreenWidth(10),
+                        ),
+                        child: buildDropdownCount(),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: getProportionateScreenWidth(10),
+                        ),
+                        child: buildDropdownAPI(),
+                      ),
+                    ),
+                  ],
+                ),
+               
+                SizedBox(height: getProportionateScreenHeight(20)),
                 _isProcessing
                     ? const CircularProgressIndicator()
                     : DefaultButton(
@@ -132,8 +162,9 @@ class _SearchFormState extends State<SearchForm> {
                             if (_nameTextController.text != '') {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      Gallery(search: _nameTextController.text),
+                                  builder: (context) => Gallery(
+                                      search: _nameTextController.text,
+                                      count: count),
                                 ),
                               );
                             }
@@ -142,7 +173,7 @@ class _SearchFormState extends State<SearchForm> {
                       ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -177,6 +208,52 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
       ),
+    );
+  }
+
+  DropdownButtonFormField buildDropdownCount() {
+    return DropdownButtonFormField(
+      value: count,
+      elevation: 16,
+      decoration: const InputDecoration(
+        fillColor: Colors.indigo,
+        labelText: 'Count',
+      ),
+      onChanged: (newValue) {
+        setState(() {
+          count = newValue!;
+        });
+      },
+      items: <String>['10', '20', '30', '40']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  DropdownButtonFormField buildDropdownAPI() {
+    return DropdownButtonFormField(
+      value: api,
+      elevation: 16,
+      decoration: const InputDecoration(
+        fillColor: Colors.indigo,
+        labelText: 'Page',
+      ),
+      onChanged: (newApiValue) {
+        setState(() {
+          api = newApiValue!;
+        });
+      },
+      items: <String>['Unsplash', 'Art Station', 'Reactor']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }

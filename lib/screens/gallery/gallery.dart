@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/screens/gallery/preview.dart';
@@ -7,17 +9,20 @@ import 'package:unsplash_client/unsplash_client.dart';
 import '../../constants.dart';
 
 class Gallery extends StatefulWidget {
-  const Gallery({Key? key, required String search})
+  const Gallery({Key? key, required String search, required String count})
       : _search = search,
+        _count = count,
         super(key: key);
 
   final String _search;
+  final String _count;
   @override
   _GalleryState createState() => _GalleryState();
 }
 
 class _GalleryState extends State<Gallery> {
   late String search;
+  late String count;
 
   late List<Photo> photolist;
   bool isLoaded = false;
@@ -25,6 +30,7 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     search = widget._search;
+    count = widget._count;
 
     loader();
     super.initState();
@@ -41,7 +47,9 @@ class _GalleryState extends State<Gallery> {
 
     // Call `goAndGet` to execute the [Request] returned from `random`
     // and throw an exception if the [Response] is not ok.
-    final photos = await client.photos.random(query: search, count: 10).goAndGet();
+    final photos = await client.photos
+        .random(query: search, count: int.parse(count))
+        .goAndGet();
 
     setState(() {
       isLoaded = true;
@@ -98,10 +106,9 @@ class _GalleryState extends State<Gallery> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                search,
+                '${search} - #${count}',
                 textAlign: TextAlign.center,
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: getProportionateScreenHeight(20)),
               isLoaded
@@ -121,8 +128,7 @@ class _GalleryState extends State<Gallery> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => Preview(
-                                        photo: photo),
+                                    builder: (context) => Preview(photo: photo),
                                   ),
                                 );
                               },
@@ -131,10 +137,7 @@ class _GalleryState extends State<Gallery> {
                           ),
                       ],
                     )
-                  : const Center(
-                      child: CircularProgressIndicator(
-                      
-                    ))
+                  : const Center(child: CircularProgressIndicator())
             ],
           ),
         ),
