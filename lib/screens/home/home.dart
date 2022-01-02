@@ -78,7 +78,7 @@ class _SearchFormState extends State<SearchForm> {
   final _registerFormKey = GlobalKey<FormState>();
 
   String count = '10';
-  String api = 'Unsplash';
+  String searchType = 'All';
 
   String? name;
   final _nameTextController = TextEditingController();
@@ -164,7 +164,8 @@ class _SearchFormState extends State<SearchForm> {
                                 MaterialPageRoute(
                                   builder: (context) => Gallery(
                                       search: _nameTextController.text,
-                                      count: count),
+                                      count: count,
+                                      searchType: searchType,),
                                 ),
                               );
                             }
@@ -236,18 +237,18 @@ class _SearchFormState extends State<SearchForm> {
 
   DropdownButtonFormField buildDropdownAPI() {
     return DropdownButtonFormField(
-      value: api,
+      value: searchType,
       elevation: 16,
       decoration: const InputDecoration(
         fillColor: Colors.indigo,
-        labelText: 'Page',
+        labelText: 'Search Type',
       ),
       onChanged: (newApiValue) {
         setState(() {
-          api = newApiValue!;
+          searchType = newApiValue!;
         });
       },
-      items: <String>['Unsplash', 'Art Station', 'Reactor']
+      items: <String>['All', 'User']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,

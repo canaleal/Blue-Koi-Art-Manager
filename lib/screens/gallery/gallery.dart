@@ -9,13 +9,15 @@ import 'package:unsplash_client/unsplash_client.dart';
 import '../../constants.dart';
 
 class Gallery extends StatefulWidget {
-  const Gallery({Key? key, required String search, required String count})
+  const Gallery({Key? key, required String search, required String count, required String searchType})
       : _search = search,
         _count = count,
+        _searchType = searchType,
         super(key: key);
 
   final String _search;
   final String _count;
+  final String _searchType;
   @override
   _GalleryState createState() => _GalleryState();
 }
@@ -23,6 +25,7 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   late String search;
   late String count;
+  late String searchType;
 
   late List<Photo> photolist;
   bool isLoaded = false;
@@ -32,12 +35,13 @@ class _GalleryState extends State<Gallery> {
   void initState() {
     search = widget._search;
     count = widget._count;
+    searchType = widget._searchType;
 
-    loader();
+    unsplashLoader();
     super.initState();
   }
 
-  void loader() async {
+  void unsplashLoader() async {
     try {
       final UnsplashClient client = UnsplashClient(
         settings: const ClientSettings(
@@ -49,9 +53,19 @@ class _GalleryState extends State<Gallery> {
 
       // Call `goAndGet` to execute the [Request] returned from `random`
       // and throw an exception if the [Response] is not ok.
-      final List<Photo> photos = await client.photos
+      
+
+      final List<Photo> photos;
+      if(searchType == 'User'){
+          photos = await client.photos
+          .random(username: search, count: int.parse(count))
+          .goAndGet();
+      }
+      else{
+          photos = await client.photos
           .random(query: search, count: int.parse(count))
           .goAndGet();
+      }
 
       setState(() {
         isLoaded = true;
@@ -65,6 +79,8 @@ class _GalleryState extends State<Gallery> {
       });
     }
   }
+
+   
 
   @override
   void dispose() {
