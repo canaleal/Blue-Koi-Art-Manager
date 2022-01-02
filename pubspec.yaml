@@ -48,6 +48,9 @@ dev_dependencies:
   unsplash_client: ^2.1.0+1
   flutter_svg: ^0.22.0 # help us to use SVG in our app
 
+  sqflite: ^2.0.1
+  path: ^1.8.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
