@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
+import 'package:flutter_test_bed/database/database.dart';
+import 'package:flutter_test_bed/domain/unimage.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 import '../../constants.dart';
@@ -34,10 +36,12 @@ class _PreviewState extends State<Preview> {
 
 
       try{
-        
+        UnImage unImage = UnImage(id: 0, url: 'tttt', username: photo.user.username.toString());
+        database();
+
       }
       catch(error){
-
+        print(error);
       }
   }
 
@@ -55,6 +59,7 @@ class _PreviewState extends State<Preview> {
               color: Colors.white,
             ),
             onPressed: () {
+              saveImage();
               // do something
             },
           )
