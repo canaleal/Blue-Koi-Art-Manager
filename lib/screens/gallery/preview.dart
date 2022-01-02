@@ -29,6 +29,18 @@ class _PreviewState extends State<Preview> {
     super.dispose();
   }
 
+
+  Future<void> saveImage() async {
+
+
+      try{
+        
+      }
+      catch(error){
+
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -36,6 +48,17 @@ class _PreviewState extends State<Preview> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Preview'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -48,20 +71,19 @@ class _PreviewState extends State<Preview> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.network(
-                  photo.urls.regular.toString(),
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-               
+                photo.urls.regular.toString(),
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
                 fit: BoxFit.cover,
               ),
               SizedBox(height: getProportionateScreenHeight(20)),
