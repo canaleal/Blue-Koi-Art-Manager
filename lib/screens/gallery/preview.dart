@@ -37,8 +37,8 @@ class _PreviewState extends State<Preview> {
 
       try{
         UnImage unImage = UnImage(id: 0, url: 'tttt', username: photo.user.username.toString());
-        database();
-
+        var data = database();
+        data.insertUnImage(unImage)
       }
       catch(error){
         print(error);
