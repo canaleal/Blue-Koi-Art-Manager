@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/screens/gallery/preview.dart';
 import 'package:flutter_test_bed/size_config.dart';
-import 'package:unsplash_client/unsplash_client.dart';
-
+import 'package:unsplash_client/unsplash_client.dart' as u;
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../constants.dart';
 
 class Gallery extends StatefulWidget {
-  const Gallery({Key? key, required String search, required String count, required String searchType})
-      : _search = search,
+  const Gallery({Key? key, required User user, required String search, required String count, required String searchType})
+      : 
+        _user = user,
+        _search = search,
         _count = count,
         _searchType = searchType,
         super(key: key);
 
+  final User _user;
   final String _search;
   final String _count;
   final String _searchType;
@@ -23,16 +26,19 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
+
+  late User user;
   late String search;
   late String count;
   late String searchType;
 
-  late List<Photo> photolist;
+  late List<u.Photo> photolist;
   bool isLoaded = false;
   bool isSearchable = false;
 
   @override
   void initState() {
+    user = widget._user;
     search = widget._search;
     count = widget._count;
     searchType = widget._searchType;
@@ -43,9 +49,9 @@ class _GalleryState extends State<Gallery> {
 
   void unsplashLoader() async {
     try {
-      final UnsplashClient client = UnsplashClient(
-        settings: const ClientSettings(
-            credentials: AppCredentials(
+      final u.UnsplashClient client = u.UnsplashClient(
+        settings: const u.ClientSettings(
+            credentials: u.AppCredentials(
           accessKey: 'byVpt0dHXyzvmAM-HixXGw_1TGQOxS4ViH1hIhNEanY',
           secretKey: 'coq98aPMtqIjOJrxZqkfaFEhFyV8vycPvbJZrK2M2cM',
         )),
@@ -55,7 +61,7 @@ class _GalleryState extends State<Gallery> {
       // and throw an exception if the [Response] is not ok.
       
 
-      final List<Photo> photos;
+      final List<u.Photo> photos;
       if(searchType == 'User'){
           photos = await client.photos
           .random(username: search, count: int.parse(count))
@@ -156,7 +162,7 @@ class _GalleryState extends State<Gallery> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            Preview(photo: photo),
+                                            Preview(user: user, photo: photo),
                                       ),
                                     );
                                   },

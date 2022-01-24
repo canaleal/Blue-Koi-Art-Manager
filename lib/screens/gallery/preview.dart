@@ -3,25 +3,31 @@ import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/database/database.dart';
 import 'package:flutter_test_bed/domain/unimage.dart';
 import 'package:flutter_test_bed/size_config.dart';
-import 'package:unsplash_client/unsplash_client.dart';
+import 'package:unsplash_client/unsplash_client.dart' as u;
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../constants.dart';
 
 class Preview extends StatefulWidget {
-  const Preview({Key? key, required Photo photo})
-      : _photo = photo,
+  const Preview({Key? key, required User user, required u.Photo photo})
+      : 
+        _user = user,
+        _photo = photo,
         super(key: key);
 
-  final Photo _photo;
+  final User _user;
+  final u.Photo _photo;
 
   @override
   _PreviewState createState() => _PreviewState();
 }
 
 class _PreviewState extends State<Preview> {
-  late Photo photo;
+  late User user;
+  late u.Photo photo;
 
   @override
   void initState() {
+     user = widget._user;
     photo = widget._photo;
     super.initState();
   }
@@ -35,14 +41,7 @@ class _PreviewState extends State<Preview> {
   Future<void> saveImage() async {
 
 
-      try{
-        UnImage unImage = UnImage(id: 0, url: 'tttt', username: photo.user.username.toString());
-        var data = database();
-        data.insertUnImage(unImage)
-      }
-      catch(error){
-        print(error);
-      }
+    
   }
 
   @override
