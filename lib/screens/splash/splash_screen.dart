@@ -4,6 +4,7 @@ import 'package:flutter_test_bed/screens/home/home.dart';
 import 'package:flutter_test_bed/screens/sign_in/sign_in_screen.dart';
 import 'package:flutter_test_bed/size_config.dart';
 
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -14,8 +15,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    
     super.initState();
   }
+
+
+  
 
   @override
   void dispose() {
