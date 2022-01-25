@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/database/database.dart';
 import 'package:flutter_test_bed/domain/unimage.dart';
@@ -8,7 +11,6 @@ import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart' as signIn;
-
 
 class Preview extends StatefulWidget {
   const Preview({Key? key, required User user, required u.Photo photo})
@@ -27,6 +29,7 @@ class Preview extends StatefulWidget {
 class _PreviewState extends State<Preview> {
   late User user;
   late u.Photo photo;
+  late File file;
 
   @override
   void initState() {
@@ -37,7 +40,23 @@ class _PreviewState extends State<Preview> {
 
   @override
   void dispose() {
+    genImage();
     super.dispose();
+  }
+
+  Future<void> genImage() async{
+    try {
+      var path = 'ff';
+      if(path != null){
+        setState(() {
+          file = File(path);
+        });
+        
+      }
+      
+    } on PlatformException catch (error) {
+      print(error);
+    }
   }
 
 
@@ -57,6 +76,9 @@ class _PreviewState extends State<Preview> {
     final authenticateClient = GoogleAuthClient(authHeaders);
     final driveApi = drive.DriveApi(authenticateClient);
 
+
+   
+  /*
     final Stream<List<int>> mediaStream =
     Future.value([104, 105]).asStream().asBroadcastStream();
     var media = new drive.Media(mediaStream, 2);
@@ -64,8 +86,9 @@ class _PreviewState extends State<Preview> {
     driveFile.name = "hello_world.txt";
     final result = await driveApi.files.create(driveFile, uploadMedia: media);
     print("Upload result: $result");
+    */
 
-    /*
+    
     bool success = await driveApi.files
         .create(drive.File()..name = photo.urls.full.toString(),
             uploadMedia: drive.Media(file.openRead(), file.lengthSync()))
@@ -88,6 +111,7 @@ class _PreviewState extends State<Preview> {
       });
     });
 
+/*
     var utility = UtilityDialog();
     if (success) {
       utility.showAlertDialog(context, 'Success',
