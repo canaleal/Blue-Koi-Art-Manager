@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_bed/components/default_button.dart';
-import 'package:flutter_test_bed/components/form_error.dart';
 import 'package:flutter_test_bed/infrastructure/firebase/authentication.dart';
-import 'package:flutter_test_bed/screens/gallery/gallery.dart';
 import 'package:flutter_test_bed/screens/home/component/sign_out_button.dart';
 import 'package:flutter_test_bed/screens/home/search_form.dart';
 import 'package:flutter_test_bed/screens/splash/splash_screen.dart';

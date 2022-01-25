@@ -6,6 +6,7 @@ import 'package:flutter_test_bed/screens/home/home.dart';
 import 'package:flutter_test_bed/screens/widgets/validator.dart';
 import 'package:flutter_test_bed/screens/widgets/fire_auth.dart';
 import 'package:flutter_test_bed/constants.dart';
+import 'package:flutter_test_bed/size_config.dart';
 import 'component/yes_account_test.dart';
 
 
@@ -35,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  SizedBox(height: 100.0),
+                  SizedBox(height: getProportionateScreenHeight(100)),
                   const Text(
                     "Sign Up",
                     style: TextStyle(
@@ -51,12 +52,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     "Sign up with your name, email and password",
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: getProportionateScreenHeight(20)),
+     
+                  const SignForm(),
 
-                  SizedBox(height: 16.0),
-                  SignForm(),
 
-
-                  SizedBox(height: 32.0),
+                  SizedBox(height: getProportionateScreenHeight(20)),
                   const YesAccountText(),
                 ],
               ),
@@ -69,6 +70,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
 class SignForm extends StatefulWidget {
+  const SignForm({Key? key}) : super(key: key);
+
   @override
   _SignFormState createState() => _SignFormState();
 }
@@ -120,21 +123,21 @@ class _SignFormState extends State<SignForm> {
             key: _registerFormKey,
             child: Column(
               children: [
-                SizedBox(height: 16.0),
+                SizedBox(height: getProportionateScreenHeight(20)),
+                
 
                 buildNameFormField(),
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(10)),
                 buildEmailFormField(),
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(10)),
                 buildPasswordFormField(),
 
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(20)),
 
 
 
-                SizedBox(height: 8.0),
                 _isProcessing
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : DefaultButton(
                   text: "Sign Up",
                   press: () async {
@@ -188,7 +191,7 @@ class _SignFormState extends State<SignForm> {
         } else if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
-        return null;
+        return;
       },
       validator: (value) => Validator.validatePassword(
         password: value,
@@ -215,7 +218,7 @@ class _SignFormState extends State<SignForm> {
         } else if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
-        return null;
+        return;
       },
       controller: _emailTextController,
       focusNode: _focusEmail,
@@ -246,7 +249,7 @@ class _SignFormState extends State<SignForm> {
         } else if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
-        return null;
+        return;
       },
       controller: _nameTextController,
       focusNode: _focusName,

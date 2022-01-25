@@ -18,7 +18,7 @@ import 'package:flutter_test_bed/screens/widgets/fire_auth.dart';
 
 
 import 'dart:async';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter_test_bed/constants.dart';
 
 
@@ -39,29 +39,13 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
-    fetchAlbum();
+   
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
 
-  Future<void> fetchAlbum() async {
-      print('get');
-      var response = await http.get(Uri.parse('https://testbluekoifunction.azurewebsites.net/api/Get-link?code=sNsU1gNxxhXhBCL5waRsadgCv6uzmKT01dukvuF354coPNJOgXR6Pw=='));
-      
-       if (response.statusCode == 200) {
-          // If the server did return a 200 OK response,
-          // then parse the JSON.
-          print((response.body));
-        } else {
-          // If the server did not return a 200 OK response,
-          // then throw an exception.
-          throw Exception('Failed to load album');
-        }
-
-  
-    }
 
   @override
   void dispose() {
@@ -126,7 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  SizedBox(height: 100.0),
+                  SizedBox(height: getProportionateScreenHeight(100)),
                   const Text(
                     "Login",
                     style: TextStyle(
@@ -140,24 +124,25 @@ class _SignInScreenState extends State<SignInScreen> {
                     "Sign in with your email and password  \nor continue with social media",
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 16.0),
-                  SignForm(),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: getProportionateScreenHeight(20)),
+          
+                  const SignForm(),
+                  SizedBox(height: getProportionateScreenHeight(20)),
                   FutureBuilder(
                     future: Authentication.initializeFirebase(context: context),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Text('Error initializing Firebase');
+                        return const Text('Error initializing Firebase');
                       } else if (snapshot.connectionState ==
                           ConnectionState.done) {
                         return GoogleSignInButton();
                       }
-                      return CircularProgressIndicator(
+                      return const CircularProgressIndicator(
                        
                       );
                     },
                   ),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: getProportionateScreenHeight(20)),
                   const NoAccountText(),
                 ],
               ),

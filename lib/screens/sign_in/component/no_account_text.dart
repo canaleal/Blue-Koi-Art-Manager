@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_bed/screens/sign_up/sign_up_screen.dart';
-import 'package:flutter_test_bed/screens/splash/splash_screen.dart';
+import 'package:flutter_test_bed/screens/sign_up/register_screen.dart';
 
 
 
@@ -24,13 +23,13 @@ class NoAccountText extends StatelessWidget {
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => SignUpScreen(
+                builder: (context) => const SignUpScreen(
 
                 ),
               ),
             );
           },
-          child: Text(
+          child: const Text(
             "Sign Up",
             style: TextStyle(
                 fontSize: 16,

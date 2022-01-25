@@ -6,7 +6,7 @@ class UtilityDialog{
     // set up the buttons
 
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: const Text("Continue"),
       onPressed:  () {
         Navigator.pop(context);
       },

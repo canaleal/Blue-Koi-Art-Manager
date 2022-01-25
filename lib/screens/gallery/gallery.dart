@@ -6,7 +6,7 @@ import 'package:flutter_test_bed/screens/gallery/preview.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../constants.dart';
+import 'package:http/http.dart' as http;
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key, required User user, required String search, required String count, required String searchType})
@@ -46,6 +46,26 @@ class _GalleryState extends State<Gallery> {
     unsplashLoader();
     super.initState();
   }
+
+
+
+  
+  Future<void> fetchAlbum() async {
+      print('get');
+      var response = await http.get(Uri.parse('https://bluekoiartstation.azurewebsites.net/api/ArtstationTrigger?code=XDD5yLKJGtvDs4dymRivJjSsoFgdu7LO9jjkufd87lOPWN8ZjR7RxA=='));
+      
+        if (response.statusCode == 200) {
+          // If the server did return a 200 OK response,
+          // then parse the JSON.
+          print((response.body));
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception('Failed to load album');
+        }
+
+  
+    }
 
   void unsplashLoader() async {
     try {

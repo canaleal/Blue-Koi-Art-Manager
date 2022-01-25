@@ -12,7 +12,7 @@ class YesAccountText extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Already have an Account? ",
           style: TextStyle(fontSize: 16),
         ),
@@ -21,13 +21,13 @@ class YesAccountText extends StatelessWidget {
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => SignInScreen(
+                builder: (context) => const SignInScreen(
 
                 ),
               ),
             );
           },
-          child: Text(
+          child: const Text(
             "Login",
             style: TextStyle(
                 fontSize: 16,
