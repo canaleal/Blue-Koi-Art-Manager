@@ -3,19 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
-import 'package:flutter_test_bed/database/database.dart';
-import 'package:flutter_test_bed/domain/unimage.dart';
+import 'package:flutter_test_bed/domain/photo.dart';
 import 'package:flutter_test_bed/infrastructure/google/google_auth_client.dart';
 import 'package:flutter_test_bed/screens/gallery/component/alert_dialog.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
-import 'package:google_sign_in/google_sign_in.dart' as signIn;
+import 'package:google_sign_in/google_sign_in.dart' as sign_in;
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as pathProvider;
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class Preview extends StatefulWidget {
   const Preview({Key? key, required User user, required u.Photo photo})
@@ -59,7 +58,7 @@ class _PreviewState extends State<Preview> {
       // Get the image name 
       final imageName = path.basename(_url.toString());
       // Get the document directory path 
-      final tempDir  = await pathProvider.getTemporaryDirectory();
+      final tempDir  = await path_provider.getTemporaryDirectory();
 
       // This is the saved image path 
       // You can use it to display the saved image later. 
@@ -120,8 +119,8 @@ class _PreviewState extends State<Preview> {
 
   Future<void> uploadToDrive() async {
     final googleSignIn =
-        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
-    final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
+        sign_in.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    final sign_in.GoogleSignInAccount? account = await googleSignIn.signIn();
 
     final authHeaders = await account!.authHeaders;
     final authenticateClient = GoogleAuthClient(authHeaders);
