@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/database/database.dart';
 import 'package:flutter_test_bed/domain/unimage.dart';
+import 'package:flutter_test_bed/infrastructure/google/google_auth_client.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../constants.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:google_sign_in/google_sign_in.dart' as signIn;
+
 
 class Preview extends StatefulWidget {
   const Preview({Key? key, required User user, required u.Photo photo})
@@ -40,8 +43,63 @@ class _PreviewState extends State<Preview> {
 
   Future<void> saveImage() async {
 
-
+      uploadToDrive();
     
+  }
+
+
+  Future<void> uploadToDrive() async {
+    final googleSignIn =
+        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
+
+    final authHeaders = await account!.authHeaders;
+    final authenticateClient = GoogleAuthClient(authHeaders);
+    final driveApi = drive.DriveApi(authenticateClient);
+
+    final Stream<List<int>> mediaStream =
+    Future.value([104, 105]).asStream().asBroadcastStream();
+    var media = new drive.Media(mediaStream, 2);
+    var driveFile = new drive.File();
+    driveFile.name = "hello_world.txt";
+    final result = await driveApi.files.create(driveFile, uploadMedia: media);
+    print("Upload result: $result");
+
+    /*
+    bool success = await driveApi.files
+        .create(drive.File()..name = photo.urls.full.toString(),
+            uploadMedia: drive.Media(file.openRead(), file.lengthSync()))
+        .then((response) async {
+      drive.Permission request = drive.Permission();
+      request.role = "commenter";
+      request.type = "anyone";
+      return await driveApi.permissions
+          .create(request, response.id!)
+          .then((resp) async {
+        if (resp.id != null) {
+          var link = "https://drive.google.com/file/d/" +
+              response.id! +
+              "/view?usp=sharing";
+          print(link);
+
+          return true;
+        }
+        return false;
+      });
+    });
+
+    var utility = UtilityDialog();
+    if (success) {
+      utility.showAlertDialog(context, 'Success',
+          'The Video was successfully uploaded to Google Drive.');
+
+      print('success');
+    } else {
+      utility.showAlertDialog(
+          context, 'Error', 'The file cannot be uploaded to Google Drive.');
+      print('fail');
+    }
+    */
   }
 
   @override
