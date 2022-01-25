@@ -6,11 +6,16 @@ import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/database/database.dart';
 import 'package:flutter_test_bed/domain/unimage.dart';
 import 'package:flutter_test_bed/infrastructure/google/google_auth_client.dart';
+import 'package:flutter_test_bed/screens/gallery/component/alert_dialog.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart' as signIn;
+
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class Preview extends StatefulWidget {
   const Preview({Key? key, required User user, required u.Photo photo})
@@ -30,39 +35,85 @@ class _PreviewState extends State<Preview> {
   late User user;
   late u.Photo photo;
   late File file;
-
+  bool isLoaded = false;
   @override
   void initState() {
-     user = widget._user;
+    user = widget._user;
     photo = widget._photo;
+     _download();
     super.initState();
   }
 
   @override
   void dispose() {
-    genImage();
+   
     super.dispose();
   }
 
-  Future<void> genImage() async{
+  Future<void> _download() async{
     try {
-      var path = 'ff';
-      if(path != null){
-        setState(() {
-          file = File(path);
+      print('downloading');
+      var _url = photo.urls.full;
+      final response = await http.get(_url);
+
+      // Get the image name 
+      final imageName = path.basename(_url.toString());
+      // Get the document directory path 
+      final tempDir  = await pathProvider.getTemporaryDirectory();
+
+      // This is the saved image path 
+      // You can use it to display the saved image later. 
+      final localPath = path.join(tempDir .path, imageName);
+
+      // Downloading
+      final imageFile = File(localPath);
+      await imageFile.writeAsBytes(response.bodyBytes);
+      print('Downloaded!');
+      file = imageFile;
+      
+       setState(() {
+          isLoaded = true;
         });
-        
-      }
       
     } on PlatformException catch (error) {
       print(error);
+      
     }
+
+  
   }
+
+
 
 
   Future<void> saveImage() async {
 
-      uploadToDrive();
+      return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Attention'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Do you want to Upload this file to Google Drive?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+            ),
+            TextButton(
+              onPressed: () => {uploadToDrive(), Navigator.pop(context, 'OK')},
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
     
   }
 
@@ -111,11 +162,11 @@ class _PreviewState extends State<Preview> {
       });
     });
 
-/*
+
     var utility = UtilityDialog();
     if (success) {
       utility.showAlertDialog(context, 'Success',
-          'The Video was successfully uploaded to Google Drive.');
+          'The File was successfully uploaded to Google Drive.');
 
       print('success');
     } else {
@@ -123,7 +174,7 @@ class _PreviewState extends State<Preview> {
           context, 'Error', 'The file cannot be uploaded to Google Drive.');
       print('fail');
     }
-    */
+    
   }
 
   @override
@@ -136,7 +187,7 @@ class _PreviewState extends State<Preview> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(
-              Icons.save,
+              Icons.upload,
               color: Colors.white,
             ),
             onPressed: () {
@@ -153,9 +204,11 @@ class _PreviewState extends State<Preview> {
         ),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Column(
+          child: isLoaded? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+              
               Image.network(
                 photo.urls.regular.toString(),
                 loadingBuilder: (BuildContext context, Widget child,
@@ -187,7 +240,10 @@ class _PreviewState extends State<Preview> {
                 ),
               ),
             ],
-          ),
+          ):  const Center(
+                      child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+                    ))
         ),
       ),
     );

@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     SizedBox(height: getProportionateScreenHeight(20)),
                     const Text(
-                      'Reddit Master',
+                      'BlueKoi Art Manager',
                       textAlign: TextAlign.center,
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.w600),

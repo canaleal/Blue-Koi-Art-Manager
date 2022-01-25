@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
                     ),
                     SizedBox(height: getProportionateScreenHeight(20)),
                     SearchForm(user: user),
-                    SizedBox(height: getProportionateScreenHeight(100)),
+                    SizedBox(height: getProportionateScreenHeight(200)),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: getProportionateScreenWidth(20)),
