@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
-import 'package:flutter_test_bed/screens/home/home.dart';
 import 'package:flutter_test_bed/screens/sign_in/sign_in_screen.dart';
 import 'package:flutter_test_bed/size_config.dart';
 
