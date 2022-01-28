@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_test_bed/components/default_button.dart';
-import 'package:flutter_test_bed/domain/photo.dart';
 import 'package:flutter_test_bed/infrastructure/google/google_auth_client.dart';
 import 'package:flutter_test_bed/screens/gallery/component/alert_dialog.dart';
 import 'package:flutter_test_bed/size_config.dart';
@@ -167,11 +165,11 @@ class _PreviewState extends State<Preview> {
       utility.showAlertDialog(context, 'Success',
           'The File was successfully uploaded to Google Drive.');
 
-      print('success');
+     
     } else {
       utility.showAlertDialog(
           context, 'Error', 'The file cannot be uploaded to Google Drive.');
-      print('fail');
+      
     }
     
   }

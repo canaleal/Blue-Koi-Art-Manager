@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_bed/components/default_button.dart';
 import 'package:flutter_test_bed/components/form_error.dart';
+import 'package:flutter_test_bed/domain/search.dart';
 import 'package:flutter_test_bed/screens/gallery/gallery.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -114,13 +115,14 @@ class _SearchFormState extends State<SearchForm> {
                             });
 
                             if (_nameTextController.text != '') {
+
+                              Search search =  Search(searchTopic: _nameTextController.text, count: int.parse(count), searchType: searchType);
+
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => Gallery(
                                       user: user,
-                                      search: _nameTextController.text,
-                                      count: count,
-                                      searchType: searchType,),
+                                      search: search),
                                 ),
                               );
                             }
