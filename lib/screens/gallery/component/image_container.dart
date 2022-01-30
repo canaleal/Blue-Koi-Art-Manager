@@ -3,11 +3,13 @@ import 'package:flutter_test_bed/domain/general_image.dart';
 import 'package:flutter_test_bed/size_config.dart';
 
 class ImageContainer extends StatefulWidget {
-  const ImageContainer({Key? key, required GeneralImage generalImage})
+  const ImageContainer({Key? key, required GeneralImage generalImage, required Function navigationHandler})
       : _generalImage = generalImage,
+        _navigationHandler = navigationHandler,
         super(key: key);
 
   final GeneralImage _generalImage;
+  final Function _navigationHandler;
 
   @override
   State<ImageContainer> createState() => _ImageContainerState();
@@ -15,10 +17,11 @@ class ImageContainer extends StatefulWidget {
 
 class _ImageContainerState extends State<ImageContainer> {
   late GeneralImage generalImage;
-  late bool isNSFW;
+  late Function navigationHandler;
 
   @override
   void initState() {
+    navigationHandler = widget._navigationHandler;
     generalImage = widget._generalImage;
     super.initState();
   }
@@ -31,7 +34,9 @@ class _ImageContainerState extends State<ImageContainer> {
           vertical: getProportionateScreenHeight(2),
           horizontal: getProportionateScreenWidth(2)),
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            navigationHandler(generalImage);
+          },
           child: Image.network(
             generalImage.urlThumb,
             fit: BoxFit.cover,

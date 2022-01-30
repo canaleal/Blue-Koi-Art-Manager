@@ -194,7 +194,10 @@ class _SignFormState extends State<SignForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(20),
+            vertical: getProportionateScreenHeight(20),
+          ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -202,11 +205,11 @@ class _SignFormState extends State<SignForm> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 16.0),
+                SizedBox(height: getProportionateScreenHeight(20)),
                 buildEmailFormField(),
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(10)),
                 buildPasswordFormField(),
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(10)),
                 Row(
                   children: [
                     Checkbox(
@@ -218,20 +221,20 @@ class _SignFormState extends State<SignForm> {
                         });
                       },
                     ),
-                    Text("Remember me"),
-                    Spacer(),
+                    const Text("Remember me"),
+                    SizedBox(height: getProportionateScreenHeight(5)),
                     GestureDetector(
                       onTap: () => {},
-                      child: Text(
+                      child: const Text(
                         "Forgot Password",
                         style: TextStyle(decoration: TextDecoration.underline),
                       ),
                     )
                   ],
                 ),
-                SizedBox(height: 8.0),
+                SizedBox(height: getProportionateScreenHeight(10)),
                 _isProcessing
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : DefaultButton(
                         text: "Login",
                         press: () async {

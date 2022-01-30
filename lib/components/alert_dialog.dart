@@ -22,9 +22,7 @@ class UtilityDialog{
           ],
         ),
       ),
-      actions: [
-        continueButton,
-      ],
+      actions: [continueButton]
     );
 
     // show the dialog

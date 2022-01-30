@@ -5,7 +5,7 @@ import 'package:flutter_test_bed/domain/general_image.dart';
 import 'package:flutter_test_bed/domain/search.dart';
 import 'package:flutter_test_bed/domain/unsplash_image.dart';
 import 'package:flutter_test_bed/screens/gallery/component/image_container.dart';
-import 'package:flutter_test_bed/screens/gallery/preview.dart';
+import 'package:flutter_test_bed/screens/preview/preview.dart';
 import 'package:flutter_test_bed/size_config.dart';
 import 'package:unsplash_client/unsplash_client.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,20 +50,15 @@ class _GalleryState extends State<Gallery> {
         'https://bluekoiartstation.azurewebsites.net/api/ArtstationTrigger?code=XDD5yLKJGtvDs4dymRivJjSsoFgdu7LO9jjkufd87lOPWN8ZjR7RxA=='));
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
+ 
       var images = jsonDecode(response.body).cast<Map<String, dynamic>>();
-
       List<ArtStationImage> elements = images
           .map<ArtStationImage>((json) => ArtStationImage.fromMap(json))
           .toList();
-
       setState(() {
         allImageList = List.from(allImageList)..addAll(elements);
       });
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
       throw Exception('Failed to load album');
     }
   }
@@ -107,12 +102,19 @@ class _GalleryState extends State<Gallery> {
     }
   }
 
+  void _navigationHandler(GeneralImage generalImage) {
+    Navigator.of(context).push(
+      //Navigate to Sign In Screen
+      MaterialPageRoute(
+        builder: (context) => Preview(user: user, generalImage: generalImage),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     super.dispose();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +151,12 @@ class _GalleryState extends State<Gallery> {
 
                           children: [
                             for (UnsplashImage generalImage in unsplashImageList)
-                              ImageContainer(generalImage: generalImage),
+                              ImageContainer(
+                                        generalImage: generalImage,
+                                        navigationHandler: _navigationHandler,
+                              ),
+                                  
+                            
                           ],
                         )
                       : Text(
