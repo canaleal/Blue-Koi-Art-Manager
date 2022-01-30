@@ -49,7 +49,7 @@ class _PreviewState extends State<Preview> {
 
   Future<void> _download() async{
     try {
-      print('downloading');
+     
       var _url = photo.urls.full;
       final response = await http.get(_url);
 
@@ -65,7 +65,7 @@ class _PreviewState extends State<Preview> {
       // Downloading
       final imageFile = File(localPath);
       await imageFile.writeAsBytes(response.bodyBytes);
-      print('Downloaded!');
+      
       file = imageFile;
       
        setState(() {
